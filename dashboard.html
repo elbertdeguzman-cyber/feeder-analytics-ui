@@ -185,4 +185,27 @@
   </script>
 
 </body>
+
+<script type="module">
+  import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+  const supabase = createClient(
+    "https://ylkmlkelbpxyqauaqcfk.supabase.co",
+    "sb_publishable_72WfxwzjZxDAQmSWVR3_3w_a58rn57e"
+  );
+
+  // Check session
+  const { data: { session } } = await supabase.auth.getSession();
+
+  if (!session) {
+    // Not logged in → back to index
+    window.location.href = "index.html";
+  } else {
+    // Display user name
+    const user = session.user;
+    const display = user.user_metadata.full_name || user.email || "User";
+    document.getElementById("username").textContent = display;
+  }
+</script>
+  
 </html>
