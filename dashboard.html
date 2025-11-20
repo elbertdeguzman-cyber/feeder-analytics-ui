@@ -21,24 +21,90 @@
   </style>
 </head>
 
+<style>
+  #sidebar {
+    transition: width 0.25s ease, padding 0.25s ease;
+  }
+  #sidebar.collapsed {
+    width: 80px !important;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+  #sidebar.collapsed .nav-label {
+    transition: opacity 0.2s ease;
+  }
+</style>
+
+<script>
+  const toggleBtn = document.getElementById("toggleSidebar");
+  const sidebar = document.getElementById("sidebar");
+  const labels = document.querySelectorAll(".nav-label");
+
+  toggleBtn.onclick = () => {
+    sidebar.classList.toggle("collapsed");
+
+    labels.forEach(label => {
+      if (sidebar.classList.contains("collapsed")) {
+        label.classList.add("opacity-0", "pointer-events-none");
+      } else {
+        label.classList.remove("opacity-0", "pointer-events-none");
+      }
+    });
+  };
+</script>
+
+
 <body class="bg-gradient-to-br from-slate-900 to-slate-700 min-h-screen text-white">
 
   <!-- Sidebar -->
-  <aside id="sidebar" class="fixed top-0 left-0 h-full w-64 bg-white/10 backdrop-blur-xl border-r border-white/10 shadow-xl p-6 fade-rise hidden md:block">
-      
-      <div class="flex items-center gap-3 mb-10">
-        <img src="assets/images/logo.png" class="h-10">
-        <h2 class="text-xl font-semibold">Feeder Analytics</h2>
-      </div>
+<aside 
+  id="sidebar"
+  class="bg-white/10 backdrop-blur-xl border-r border-white/10 w-64 min-h-screen p-6 flex flex-col transition-all duration-300"
+>
 
-      <nav class="space-y-2 text-slate-200">
-        <a href="dashboard.html" class="block py-2.5 px-4 rounded-lg bg-white/10 hover:bg-white/20 transition">📊 Dashboard Overview</a>
-        <a href="feeder-review-dashboard.html" class="block py-2.5 px-4 rounded-lg hover:bg-white/10 transition">📝 Feeder Reviews</a>
-        <a href="#" class="block py-2.5 px-4 rounded-lg hover:bg-white/10 transition">🎒 COS Insights</a>
-        <a href="#" class="block py-2.5 px-4 rounded-lg hover:bg-white/10 transition">🏫 Campus Data</a>
-        <a href="#" class="block py-2.5 px-4 rounded-lg hover:bg-white/10 transition">⚙️ Admin Tools</a>
-      </nav>
-  </aside>
+  <!-- Toggle Button -->
+  <button id="toggleSidebar" 
+    class="text-white mb-6 hover:bg-white/10 p-2 rounded-lg transition">
+    ☰
+  </button>
+
+  <!-- Logo -->
+  <div class="flex items-center space-x-3 mb-10">
+    <img src="assets/images/logo.png" class="h-10 w-auto" />
+    <span class="text-xl font-bold text-white nav-label">Feeder Analytics</span>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="space-y-2">
+
+    <a href="#" class="flex items-center space-x-3 text-white/90 hover:bg-white/10 p-3 rounded-lg transition">
+      <span class="text-lg">🏠</span>
+      <span class="nav-label">Dashboard Overview</span>
+    </a>
+
+    <a href="#" class="flex items-center space-x-3 text-white/90 hover:bg-white/10 p-3 rounded-lg transition">
+      <span class="text-lg">📊</span>
+      <span class="nav-label">Feeder Reviews</span>
+    </a>
+
+    <a href="#" class="flex items-center space-x-3 text-white/90 hover:bg-white/10 p-3 rounded-lg transition">
+      <span class="text-lg">💡</span>
+      <span class="nav-label">COS Insights</span>
+    </a>
+
+    <a href="#" class="flex items-center space-x-3 text-white/90 hover:bg-white/10 p-3 rounded-lg transition">
+      <span class="text-lg">🏫</span>
+      <span class="nav-label">Campus Data</span>
+    </a>
+
+    <a href="#" class="flex items-center space-x-3 text-white/90 hover:bg-white/10 p-3 rounded-lg transition">
+      <span class="text-lg">⚙️</span>
+      <span class="nav-label">Admin Tools</span>
+    </a>
+
+  </nav>
+</aside>
+
 
   <!-- Top Navbar -->
   <header class="md:ml-64 bg-white/10 backdrop-blur-xl border-b border-white/10 p-4 flex justify-between items-center shadow-lg fade-rise">
