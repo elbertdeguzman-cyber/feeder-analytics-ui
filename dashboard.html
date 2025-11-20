@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Feeder Analytics | Dashboard</title>
+
+  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
-    /* Fade rise animation */
     .fade-rise {
       opacity: 0;
       transform: translateY(15px);
@@ -20,7 +21,7 @@
       }
     }
 
-    /* Sidebar transition + collapsed state */
+    /* Collapsible Sidebar */
     #sidebar {
       transition: width 0.25s ease, padding 0.25s ease;
     }
@@ -30,162 +31,16 @@
       padding-right: 0.75rem;
     }
     #sidebar.collapsed .nav-label {
-      display: none;
-    }
-
-    /* Content shift when sidebar collapses (desktop only) */
-    @media (min-width: 768px) {
-      .with-sidebar {
-        margin-left: 16rem; /* 64 tailwind */
-        transition: margin-left 0.25s ease;
-      }
-      .with-sidebar-collapsed {
-        margin-left: 5rem; /* ~80px */
-        transition: margin-left 0.25s ease;
-      }
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
     }
   </style>
 </head>
 
 <body class="bg-gradient-to-br from-slate-900 to-slate-700 min-h-screen text-white">
 
-  <!-- SIDEBAR -->
-  <aside
-    id="sidebar"
-    class="fixed left-0 top-0 h-full w-64 bg-white/10 backdrop-blur-xl border-r border-white/10 p-6 flex flex-col transition-all duration-300 z-20"
-  >
-    <!-- Toggle Button -->
-    <button
-      id="toggleSidebar"
-      class="text-white mb-6 hover:bg-white/10 p-2 rounded-lg transition flex items-center justify-center"
-      type="button"
-    >
-      ☰
-    </button>
-
-    <!-- Logo + Title -->
-    <div class="flex items-center space-x-3 mb-10">
-      <img src="assets/images/logo.png" class="h-10 w-auto" />
-      <span class="text-xl font-bold text-white nav-label">Feeder Analytics</span>
-    </div>
-
-    <!-- Navigation -->
-    <nav class="space-y-2">
-      <a href="dashboard.html"
-         class="flex items-center space-x-3 text-white/90 hover:bg-white/10 p-3 rounded-lg transition">
-        <span class="text-lg">🏠</span>
-        <span class="nav-label">Dashboard Overview</span>
-      </a>
-
-      <a href="feeder-review-dashboard.html"
-         class="flex items-center space-x-3 text-white/90 hover:bg-white/10 p-3 rounded-lg transition">
-        <span class="text-lg">📊</span>
-        <span class="nav-label">Feeder Reviews</span>
-      </a>
-
-      <a href="#"
-         class="flex items-center space-x-3 text-white/90 hover:bg-white/10 p-3 rounded-lg transition">
-        <span class="text-lg">💡</span>
-        <span class="nav-label">COS Insights</span>
-      </a>
-
-      <a href="#"
-         class="flex items-center space-x-3 text-white/90 hover:bg-white/10 p-3 rounded-lg transition">
-        <span class="text-lg">🏫</span>
-        <span class="nav-label">Campus Data</span>
-      </a>
-
-      <a href="#"
-         class="flex items-center space-x-3 text-white/90 hover:bg-white/10 p-3 rounded-lg transition">
-        <span class="text-lg">⚙️</span>
-        <span class="nav-label">Admin Tools</span>
-      </a>
-    </nav>
-  </aside>
-
-  <!-- TOP NAVBAR -->
-  <header
-    id="topbar"
-    class="with-sidebar bg-white/10 backdrop-blur-xl border-b border-white/10 p-4 flex justify-between items-center shadow-lg fade-rise relative z-10"
-  >
-    <!-- Mobile-only sidebar toggle (shows/hides entire sidebar) -->
-    <button
-      id="mobileToggle"
-      class="md:hidden text-white text-2xl px-2"
-      type="button"
-    >
-      ☰
-    </button>
-
-    <h1 class="text-xl font-semibold tracking-wide">Dashboard</h1>
-
-    <div class="flex items-center gap-3">
-      <span id="username" class="text-sm text-slate-300">Loading...</span>
-      <img src="https://ui-avatars.com/api/?name=STI" class="h-8 w-8 rounded-full border border-white/20" />
-    </div>
-  </header>
-
-  <!-- MAIN CONTENT -->
-  <main
-    id="mainContent"
-    class="with-sidebar p-6 fade-rise"
-  >
-    <div class="bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-lg">
-      <h2 class="text-2xl font-bold mb-4">Welcome to Feeder Analytics</h2>
-      <p class="text-slate-300 mb-4">
-        This section will contain your dashboard charts, tables, and data visualizations.
-      </p>
-
-      <!-- Placeholder Widgets -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="bg-white/5 p-6 rounded-xl border border-white/10">
-          <h3 class="text-lg font-semibold mb-2">Enrolment Overview</h3>
-          <p class="text-slate-400 text-sm">Chart placeholder</p>
-        </div>
-
-        <div class="bg-white/5 p-6 rounded-xl border border-white/10">
-          <h3 class="text-lg font-semibold mb-2">Top Feeder Schools</h3>
-          <p class="text-slate-400 text-sm">Chart placeholder</p>
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <script>
-    // Desktop collapse (icon-only)
-    const sidebar = document.getElementById('sidebar');
-    const toggleSidebarBtn = document.getElementById('toggleSidebar');
-    const topbar = document.getElementById('topbar');
-    const mainContent = document.getElementById('mainContent');
-
-    toggleSidebarBtn.addEventListener('click', () => {
-      const collapsed = sidebar.classList.toggle('collapsed');
-
-      if (collapsed) {
-        topbar.classList.remove('with-sidebar');
-        topbar.classList.add('with-sidebar-collapsed');
-        mainContent.classList.remove('with-sidebar');
-        mainContent.classList.add('with-sidebar-collapsed');
-      } else {
-        topbar.classList.add('with-sidebar');
-        topbar.classList.remove('with-sidebar-collapsed');
-        mainContent.classList.add('with-sidebar');
-        mainContent.classList.remove('with-sidebar-collapsed');
-      }
-    });
-
-    // Mobile show/hide entire sidebar
-    const mobileToggle = document.getElementById('mobileToggle');
-    mobileToggle.addEventListener('click', () => {
-      sidebar.classList.toggle('hidden');
-    });
-
-    // Placeholder for user display once Azure auth integrates
-    document.getElementById("username").textContent = "User";
-  </script>
-
-</body>
-
+<!-- 🔒 AUTH GUARD -->
 <script type="module">
   import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
@@ -194,18 +49,133 @@
     "sb_publishable_72WfxwzjZxDAQmSWVR3_3w_a58rn57e"
   );
 
-  // Check session
   const { data: { session } } = await supabase.auth.getSession();
 
   if (!session) {
-    // Not logged in → back to index
     window.location.href = "index.html";
   } else {
-    // Display user name
     const user = session.user;
-    const display = user.user_metadata.full_name || user.email || "User";
-    document.getElementById("username").textContent = display;
+    const name = user.user_metadata.full_name || user.email || "User";
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("username").textContent = name;
+    });
   }
+
+  // Logout
+  document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("logoutBtn").onclick = async () => {
+      await supabase.auth.signOut();
+      window.location.href = "index.html";
+    };
+  });
 </script>
-  
+
+<!-- 🧭 SIDEBAR -->
+<aside
+  id="sidebar"
+  class="bg-white/10 backdrop-blur-xl border-r border-white/10 w-64 min-h-screen p-6 flex flex-col fixed top-0 left-0 transition-all duration-300"
+>
+  <!-- Toggle -->
+  <button id="toggleSidebar"
+    class="text-white mb-6 hover:bg-white/10 p-2 rounded-lg transition">
+    ☰
+  </button>
+
+  <!-- Logo -->
+  <div class="flex items-center space-x-3 mb-10">
+    <img src="assets/images/logo.png" class="h-10 w-auto" />
+    <span class="text-xl font-bold nav-label">Feeder Analytics</span>
+  </div>
+
+  <!-- Nav -->
+  <nav class="space-y-2">
+
+    <a href="dashboard.html"
+      class="flex items-center space-x-3 text-white/90 hover:bg-white/10 p-3 rounded-lg transition">
+      <span class="text-lg">🏠</span>
+      <span class="nav-label">Dashboard Overview</span>
+    </a>
+
+    <a href="feeder-review-dashboard.html"
+      class="flex items-center space-x-3 text-white/90 hover:bg-white/10 p-3 rounded-lg transition">
+      <span class="text-lg">📊</span>
+      <span class="nav-label">Feeder Reviews</span>
+    </a>
+
+    <a href="#"
+      class="flex items-center space-x-3 text-white/90 hover:bg-white/10 p-3 rounded-lg transition">
+      <span class="text-lg">💡</span>
+      <span class="nav-label">COS Insights</span>
+    </a>
+
+    <a href="#"
+      class="flex items-center space-x-3 text-white/90 hover:bg-white/10 p-3 rounded-lg transition">
+      <span class="text-lg">🏫</span>
+      <span class="nav-label">Campus Data</span>
+    </a>
+
+    <a href="#"
+      class="flex items-center space-x-3 text-white/90 hover:bg-white/10 p-3 rounded-lg transition">
+      <span class="text-lg">⚙️</span>
+      <span class="nav-label">Admin Tools</span>
+    </a>
+
+  </nav>
+</aside>
+
+<!-- 🔼 TOGGLE LOGIC -->
+<script>
+  document.getElementById("toggleSidebar").onclick = () => {
+    const sidebar = document.getElementById("sidebar");
+    sidebar.classList.toggle("collapsed");
+  };
+</script>
+
+
+<!-- 🔷 TOP NAVBAR -->
+<header class="ml-64 bg-white/10 backdrop-blur-xl border-b border-white/10 p-4 flex justify-between items-center shadow-lg fade-rise">
+  <h1 class="text-xl font-semibold tracking-wide">Dashboard</h1>
+
+  <div class="flex items-center gap-4">
+    <span id="username" class="text-sm text-slate-300">Loading...</span>
+
+    <button id="logoutBtn"
+      class="px-3 py-1 rounded-lg bg-red-500/30 hover:bg-red-500/50 transition text-sm">
+      Logout
+    </button>
+
+    <img src="https://ui-avatars.com/api/?name=STI"
+      class="h-8 w-8 rounded-full border border-white/20" />
+  </div>
+</header>
+
+
+<!-- 📊 MAIN CONTENT -->
+<main class="ml-64 p-6 fade-rise">
+
+  <div class="bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-lg">
+    <h2 class="text-2xl font-bold mb-4">Welcome to Feeder Analytics</h2>
+    <p class="text-slate-300 mb-4">
+      This section will contain your dashboard charts, tables, and data visualizations.
+    </p>
+
+    <!-- Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      
+      <div class="bg-white/5 p-6 rounded-xl border border-white/10">
+        <h3 class="text-lg font-semibold mb-2">Enrolment Overview</h3>
+        <p class="text-slate-400 text-sm">Chart placeholder</p>
+      </div>
+
+      <div class="bg-white/5 p-6 rounded-xl border border-white/10">
+        <h3 class="text-lg font-semibold mb-2">Top Feeder Schools</h3>
+        <p class="text-slate-400 text-sm">Chart placeholder</p>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+</body>
 </html>
