@@ -1,33 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Dashboard • Feeder Analytics</title>
+  <title>Feeder Analytics | Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 
-  <link rel="stylesheet" href="assets/css/bootstrap.min.css"/>
-  <link rel="stylesheet" href="assets/css/styles.css"/>
+  <style>
+    .fade-rise {
+      opacity: 0;
+      transform: translateY(15px);
+      animation: fadeRise 0.6s ease forwards;
+    }
+    @keyframes fadeRise {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
 </head>
 
-<body>
+<body class="bg-gradient-to-br from-slate-900 to-slate-700 min-h-screen text-white">
 
-<nav class="navbar navbar-dark bg-primary px-3">
-  <span class="navbar-brand">Feeder Analytics</span>
-  <span id="userDisplayName" class="text-white"></span>
-</nav>
+  <!-- Sidebar -->
+  <aside id="sidebar" class="fixed top-0 left-0 h-full w-64 bg-white/10 backdrop-blur-xl border-r border-white/10 shadow-xl p-6 fade-rise hidden md:block">
+      
+      <div class="flex items-center gap-3 mb-10">
+        <img src="assets/images/logo.png" class="h-10">
+        <h2 class="text-xl font-semibold">Feeder Analytics</h2>
+      </div>
 
-<div class="container py-4">
+      <nav class="space-y-2 text-slate-200">
+        <a href="dashboard.html" class="block py-2.5 px-4 rounded-lg bg-white/10 hover:bg-white/20 transition">📊 Dashboard Overview</a>
+        <a href="feeder-review-dashboard.html" class="block py-2.5 px-4 rounded-lg hover:bg-white/10 transition">📝 Feeder Reviews</a>
+        <a href="#" class="block py-2.5 px-4 rounded-lg hover:bg-white/10 transition">🎒 COS Insights</a>
+        <a href="#" class="block py-2.5 px-4 rounded-lg hover:bg-white/10 transition">🏫 Campus Data</a>
+        <a href="#" class="block py-2.5 px-4 rounded-lg hover:bg-white/10 transition">⚙️ Admin Tools</a>
+      </nav>
+  </aside>
 
-  <h3 class="mb-3">Pending Feeder Matches</h3>
-  <div id="reviewList" class="row g-3"></div>
+  <!-- Top Navbar -->
+  <header class="md:ml-64 bg-white/10 backdrop-blur-xl border-b border-white/10 p-4 flex justify-between items-center shadow-lg fade-rise">
+      <button onclick="toggleSidebar()" class="md:hidden text-white text-2xl px-2">
+        ☰
+      </button>
 
-</div>
+      <h1 class="text-xl font-semibold tracking-wide">Dashboard</h1>
 
-<script src="assets/js/bootstrap.bundle.min.js"></script>
-<script src="assets/js/api.js"></script>
-<script src="assets/js/ui.js"></script>
-<script src="assets/js/auth.js"></script>
-<script src="config.js"></script>
+      <div class="flex items-center gap-3">
+        <span id="username" class="text-sm text-slate-300">Loading...</span>
+        <img src="https://ui-avatars.com/api/?name=STI" class="h-8 w-8 rounded-full border border-white/20" />
+      </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="md:ml-64 p-6 fade-rise">
+      
+      <div class="bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-lg">
+        <h2 class="text-2xl font-bold mb-4">Welcome to Feeder Analytics</h2>
+        <p class="text-slate-300 mb-4">This section will contain your dashboard charts, tables, and data visualizations.</p>
+
+        <!-- Placeholder Widgets -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+          <div class="bg-white/5 p-6 rounded-xl border border-white/10">
+            <h3 class="text-lg font-semibold mb-2">Enrolment Overview</h3>
+            <p class="text-slate-400 text-sm">Chart placeholder</p>
+          </div>
+
+          <div class="bg-white/5 p-6 rounded-xl border border-white/10">
+            <h3 class="text-lg font-semibold mb-2">Top Feeder Schools</h3>
+            <p class="text-slate-400 text-sm">Chart placeholder</p>
+          </div>
+
+        </div>
+      </div>
+
+  </main>
+
+  <script>
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('hidden');
+    }
+
+    // Placeholder for user display once Azure auth integrates
+    document.getElementById("username").textContent = "User";
+  </script>
 
 </body>
 </html>
