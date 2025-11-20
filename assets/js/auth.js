@@ -1,36 +1,26 @@
-// ===== Azure AD Login Setup ===== //
-
 const msalConfig = {
     auth: {
-        clientId: window.CONFIG.CLIENT_ID,
-        authority: `https://login.microsoftonline.com/${window.CONFIG.TENANT_ID}`,
-        redirectUri: window.location.origin + "/feeder-analytics-ui/login.html"
+        clientId: "8ab20801-723d-49af-8d8b-2ba7bd2f5ccd",
+        authority: "https://login.microsoftonline.com/96c62f5f-3c65-48a8-9dd3-868be91bdce3",
+        redirectUri: "https://elbertdeguzman-cyber.github.io/feeder-analytics-ui/login.html"
     }
 };
 
 const msalInstance = new msal.PublicClientApplication(msalConfig);
 
-async function login() {
+async function signIn() {
     try {
-        await msalInstance.loginRedirect({
-            scopes: ["User.Read", "email", "openid"]
+        const loginResponse = await msalInstance.loginPopup({
+            scopes: ["User.Read"]
         });
-    } catch (err) {
-        console.error("Login failed", err);
+
+        // Save user info
+        localStorage.setItem("user", JSON.stringify(loginResponse.account));
+
+        // Redirect to dashboard
+        window.location.href = "dashboard.html";
+
+    } catch (error) {
+        console.error(error);
     }
 }
-
-document.addEventListener("DOMContentLoaded", () => {
-    const btn = document.getElementById("btnLogin");
-    if (btn) btn.onclick = login;
-});
-
-// Handle redirect back from Microsoft Login
-msalInstance.handleRedirectPromise().then(async (authResult) => {
-    if (authResult) {
-        msalInstance.setActiveAccount(authResult.account);
-        localStorage.setItem("user", JSON.stringify(authResult.account));
-
-        window.location.href = "dashboard.html";
-    }
-});
