@@ -1,0 +1,15 @@
+body.bg-gradient-primary {
+    background: linear-gradient(135deg, #0062e6, #33aeff);
+}
+
+.login-container {
+    width: 380px;
+    background: #fff;
+    border-radius: 10px;
+    margin: auto;
+    margin-top: 10vh;
+}
+
+.card button {
+    border-radius: 6px;
+}
