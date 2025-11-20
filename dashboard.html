@@ -42,6 +42,49 @@
 
 <!-- 🔒 AUTH GUARD -->
 <script type="module">
+
+  const { data: auth } = await supabase.auth.getUser();
+if (!auth?.user) {
+  window.location.href = "/login.html";
+  return;
+}
+
+const email = auth.user.email.toLowerCase();
+
+// 1. Fetch user access record
+const { data: allowed } = await supabase
+  .from("allowed_users")
+  .select("*")
+  .eq("email", email)
+  .maybeSingle();
+
+// If not in allowlist → deny
+if (!allowed) {
+  alert("You are not authorized to access this system.");
+  await supabase.auth.signOut();
+  window.location.href = "/login.html";
+  return;
+}
+
+// If disabled → deny
+if (!allowed.enabled) {
+  alert("Your access has been disabled.");
+  await supabase.auth.signOut();
+  window.location.href = "/login.html";
+  return;
+}
+
+// Update last login
+await supabase
+  .from("allowed_users")
+  .update({ last_login: new Date().toISOString() })
+  .eq("email", email);
+
+// Set role for use in UI
+window.userRole = allowed.role;
+
+  
+  
   import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
   const supabase = createClient(
