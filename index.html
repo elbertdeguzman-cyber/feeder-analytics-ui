@@ -1,66 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Feeder Analytics</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Feeder Analytics</title>
 
-  <!-- Bootstrap -->
-  <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
 
-  <!-- Custom Styles -->
-  <style>
-    body {
-      height: 100vh;
-      margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: linear-gradient(135deg, #e3f2fd, #bbdefb);
-      font-family: "Segoe UI", sans-serif;
-    }
+    <!-- Global Theme Styles -->
+    <link rel="stylesheet" href="assets/css/styles.css" />
 
-    .welcome-card {
-      background: rgba(255, 255, 255, 0.8);
-      backdrop-filter: blur(10px);
-      border-radius: 16px;
-      padding: 48px 32px;
-      text-align: center;
-      max-width: 420px;
-      width: 100%;
-      box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.15);
-    }
+    <style>
+        body {
+            background: radial-gradient(circle at top, #1e293b 0%, #0f172a 80%);
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: "Inter", sans-serif;
+            color: white;
+        }
 
-    .welcome-card img {
-      width: 120px;
-      margin-bottom: 24px;
-    }
+        .landing-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            padding: 40px 50px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.45);
+            text-align: center;
+            width: 100%;
+            max-width: 420px;
+        }
 
-    .welcome-card h1 {
-      font-size: 1.8rem;
-      font-weight: 700;
-      margin-bottom: 16px;
-      color: #0d47a1;
-    }
+        .landing-card img {
+            width: 110px;
+            margin-bottom: 20px;
+        }
 
-    .welcome-card p {
-      color: #555;
-      margin-bottom: 32px;
-    }
-  </style>
+        .landing-card h1 {
+            font-weight: 700;
+            font-size: 1.9rem;
+        }
+
+        .landing-card p {
+            opacity: 0.8;
+            margin-bottom: 30px;
+        }
+
+        .btn-login {
+            background-color: #2563eb;
+            border: none;
+            padding: 14px;
+            font-size: 1.1rem;
+            width: 100%;
+            border-radius: 10px;
+            transition: 0.2s ease-in-out;
+        }
+
+        .btn-login:hover {
+            background-color: #1d4ed8;
+            transform: translateY(-2px);
+        }
+    </style>
 </head>
+
 <body>
 
-  <div class="welcome-card">
-    <img src="assets/images/logo.png" alt="STI Logo">
+    <div class="landing-card">
+        <img src="assets/images/logo.png" alt="STI Logo">
 
-    <h1>Feeder Analytics</h1>
-    <p>Data-driven marketing insights for STI campuses.</p>
+        <h1>Feeder Analytics</h1>
+        <p>STI College Data Intelligence Platform</p>
 
-    <a class="btn btn-primary btn-lg w-100" href="login.html">
-      Login with O365
-    </a>
-  </div>
+        <a href="login.html" class="btn btn-primary btn-login">
+            Login with O365
+        </a>
+    </div>
 
 </body>
 </html>
