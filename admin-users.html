@@ -1,287 +1,303 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Admin Tools | Feeder Analytics</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Feeder Analytics | Admin Tools</title>
 
   <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
 
+  <!-- Supabase -->
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+    window.supabase = createClient(
+      "https://ylkmlkelbpxyqauaqcfk.supabase.co",
+      "sb_publishable_72WfxwzjZxDAQmSWVR3_3w_a58rn57e"
+    );
+  </script>
+
   <style>
     .fade-rise {
       opacity: 0;
-      transform: translateY(15px);
+      transform: translateY(12px);
       animation: fadeRise 0.6s ease forwards;
     }
-    @keyframes fadeRise {
-      to { opacity: 1; transform: translateY(0); }
-    }
 
-    #sidebar {
-      transition: width .25s ease, padding .25s ease;
-    }
-    #sidebar.collapsed {
-      width: 80px !important;
-      padding-left: 0.75rem;
-      padding-right: 0.75rem;
-    }
-    #sidebar.collapsed .nav-label {
-      opacity: 0;
-      pointer-events: none;
+    @keyframes fadeRise {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
   </style>
 </head>
 
-<body class="bg-gradient-to-br from-slate-900 to-slate-700 min-h-screen text-white">
+<body class="bg-gradient-to-br from-slate-900 to-slate-700 min-h-screen text-white p-6">
 
-<!-- ========================================================= -->
-<!-- SIDEBAR -->
-<!-- ========================================================= -->
-<aside 
-  id="sidebar"
-  class="bg-white/10 backdrop-blur-xl border-r border-white/10 w-64 min-h-screen p-6 flex flex-col fixed"
->
-  <button id="toggleSidebarBtn"
-    class="text-white mb-6 hover:bg-white/10 p-2 rounded-lg transition">
-    ☰
-  </button>
+  <div class="max-w-5xl mx-auto fade-rise">
 
-  <div class="flex items-center space-x-3 mb-10">
-    <img src="assets/images/logo.png" class="h-10 w-auto">
-    <span class="text-xl font-bold nav-label">Admin Panel</span>
-  </div>
+    <h1 class="text-3xl font-bold mb-6 text-white/90">⚙️ Admin Tools</h1>
 
-  <nav class="space-y-2">
+    <!-- Tabs -->
+    <div class="flex gap-3 mb-6">
+      <button id="tabUsers"
+        class="px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold">Users</button>
 
-    <a href="dashboard.html" 
-       class="flex items-center space-x-3 text-white/80 hover:bg-white/10 p-3 rounded-lg">
-       <span class="text-lg">🏠</span>
-       <span class="nav-label">Dashboard</span>
-    </a>
-
-    <a href="feeder-review-dashboard.html" 
-       class="flex items-center space-x-3 text-white/80 hover:bg-white/10 p-3 rounded-lg">
-       <span class="text-lg">📊</span>
-       <span class="nav-label">Feeder Reviews</span>
-    </a>
-
-    <!-- Admin Tools Tab -->
-    <a href="admin-users.html"
-       class="flex items-center space-x-3 bg-blue-600/30 hover:bg-blue-600/40 p-3 rounded-lg">
-       <span class="text-lg">⚙️</span>
-       <span class="nav-label font-bold">Admin Tools</span>
-    </a>
-
-  </nav>
-</aside>
-
-
-<!-- ========================================================= -->
-<!-- TOP NAV -->
-<!-- ========================================================= -->
-<header class="ml-64 bg-white/10 backdrop-blur-xl border-b border-white/10 p-4 flex justify-between items-center shadow-lg fade-rise">
-  <h1 class="text-xl font-semibold tracking-wide">Admin Tools</h1>
-
-  <div class="flex items-center gap-3">
-    <span id="username" class="text-sm text-slate-300">Loading...</span>
-    <img id="userAvatar"
-         src="https://ui-avatars.com/api/?name=User"
-         class="h-8 w-8 rounded-full border border-white/20">
-  </div>
-</header>
-
-
-<!-- ========================================================= -->
-<!-- MAIN CONTENT -->
-<!-- ========================================================= -->
-<main class="ml-64 p-6 fade-rise">
-
-  <!-- Title -->
-  <h2 class="text-2xl font-bold mb-6">User Access Control</h2>
-
-  <!-- Add User Panel -->
-  <div class="bg-white/10 backdrop-blur-xl border border-white/10 rounded-xl p-6 mb-6">
-    <h3 class="text-xl font-semibold mb-3">Add Authorized Email</h3>
-
-    <div class="flex gap-4">
-      <input id="newEmail"
-             type="email"
-             placeholder="user@sti.edu.ph"
-             class="w-full p-3 rounded-lg bg-white/10 border border-white/20 text-white" />
-
-      <button id="addUserBtn"
-              class="px-4 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold">
-        Add
+      <button id="tabCampuses"
+        class="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white font-semibold">
+        Campus Assignment
       </button>
+    </div>
+
+    <!-- SECTION: USER ACCESS CONTROL -->
+    <div id="sectionUsers">
+      <div class="bg-white/10 backdrop-blur-xl p-6 rounded-2xl border border-white/20">
+
+        <h2 class="text-xl font-semibold mb-4">User Access Control</h2>
+
+        <!-- Add User -->
+        <div class="flex gap-3 mb-4">
+          <input id="newUserEmail" type="email" placeholder="Enter STI email..."
+            class="flex-1 p-3 rounded-lg bg-white/10 border border-white/20 text-white" />
+
+          <select id="newUserRole"
+            class="p-3 rounded-lg bg-white/10 border border-white/20 text-white">
+            <option value="viewer">Viewer</option>
+            <option value="manager">Manager</option>
+            <option value="superadmin">Super Admin</option>
+          </select>
+
+          <button id="addUserBtn"
+            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg">Add</button>
+        </div>
+
+        <!-- User Table -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left">
+            <thead>
+              <tr class="text-slate-300">
+                <th class="py-2">Email</th>
+                <th class="py-2">Role</th>
+                <th class="py-2">Enabled</th>
+                <th class="py-2">Last Login</th>
+                <th class="py-2">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="userTable" class="text-white"></tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SECTION: CAMPUS ASSIGNMENT -->
+    <div id="sectionCampuses" class="hidden fade-rise">
+
+      <div class="bg-white/10 backdrop-blur-xl p-6 rounded-2xl border border-white/20">
+
+        <h2 class="text-xl font-semibold mb-4">Campus Assignment</h2>
+
+        <!-- User Selector -->
+        <div class="mb-4">
+          <label class="text-slate-300">Select User</label>
+          <select id="assignUserSelector"
+            class="w-full p-3 rounded-lg bg-white/10 border border-white/20 text-white"></select>
+        </div>
+
+        <!-- Campus Selection -->
+        <div class="mb-4">
+          <label class="text-slate-300">Add Campus</label>
+          <select id="campusSelector"
+            class="w-full p-3 rounded-lg bg-white/10 border border-white/20 text-white"></select>
+
+          <button id="assignCampusBtn"
+            class="mt-3 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg">
+            Assign Campus
+          </button>
+        </div>
+
+        <!-- Assigned Campus List -->
+        <div class="bg-white/5 p-4 rounded-xl border border-white/20">
+          <h3 class="text-lg mb-3">Assigned Campuses</h3>
+          <ul id="assignedCampusList" class="space-y-2"></ul>
+        </div>
+
+      </div>
     </div>
   </div>
 
-  <!-- Users Table -->
-  <div class="bg-white/10 backdrop-blur-xl border border-white/10 rounded-xl p-6">
-    <h3 class="text-xl font-semibold mb-4">Allowed Users</h3>
+  <!-- MAIN LOGIC -->
+  <script>
+    const tabUsers = document.getElementById("tabUsers");
+    const tabCampuses = document.getElementById("tabCampuses");
+    const sectionUsers = document.getElementById("sectionUsers");
+    const sectionCampuses = document.getElementById("sectionCampuses");
 
-    <table class="w-full text-left text-sm">
-      <thead class="text-slate-300 border-b border-white/10">
-        <tr>
-          <th class="p-2">Email</th>
-          <th class="p-2">Role</th>
-          <th class="p-2">Enabled</th>
-          <th class="p-2">Last Login</th>
-          <th class="p-2 text-right">Actions</th>
-        </tr>
-      </thead>
-      <tbody id="usersTable"></tbody>
-    </table>
-  </div>
+    // TAB SWITCHING
+    tabUsers.onclick = () => {
+      sectionUsers.classList.remove("hidden");
+      sectionCampuses.classList.add("hidden");
+      tabUsers.classList.add("bg-blue-600");
+      tabCampuses.classList.remove("bg-blue-600");
+    };
 
-</main>
+    tabCampuses.onclick = () => {
+      sectionUsers.classList.add("hidden");
+      sectionCampuses.classList.remove("hidden");
+      tabCampuses.classList.add("bg-blue-600");
+      tabUsers.classList.remove("bg-blue-600");
+    };
 
+    // LOAD USERS IN TABLE
+    async function loadUsers() {
+      const { data: users } = await supabase
+        .from("allowed_users")
+        .select("*")
+        .order("email");
 
-<!-- ========================================================= -->
-<!-- SUPABASE LOGIC -->
-<!-- ========================================================= -->
-<script type="module">
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+      const tbody = document.getElementById("userTable");
+      tbody.innerHTML = "";
 
-const supabase = createClient(
-  "https://ylkmlkelbpxyqauaqcfk.supabase.co",
-  "sb_publishable_72WfxwzjZxDAQmSWVR3_3w_a58rn57e"
-);
+      users?.forEach(u => {
+        tbody.innerHTML += `
+          <tr class="border-b border-white/10">
+            <td class="py-2">${u.email}</td>
+            <td class="py-2">${u.role}</td>
+            <td class="py-2">${u.enabled ? "✔ Enabled" : "✖ Disabled"}</td>
+            <td class="py-2">${u.last_login || "-"}</td>
+            <td class="py-2 flex gap-2">
+              <button onclick="toggleUser('${u.id}', ${u.enabled})"
+                class="px-2 py-1 bg-white/10 rounded">Toggle</button>
 
-// -------------------------------
-// AUTH CHECK
-// -------------------------------
-const { data: auth } = await supabase.auth.getUser();
-if (!auth?.user) window.location.href = "login.html";
+              <button onclick="deleteUser('${u.id}')"
+                class="px-2 py-1 bg-red-600 rounded">Delete</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
 
-const email = auth.user.email.toLowerCase();
+    // LOAD USERS FOR CAMPUS ASSIGNMENT
+    async function loadUsersForCampusAssignment() {
+      const { data: users } = await supabase
+        .from("allowed_users")
+        .select("*")
+        .order("email");
 
-// Load profile
-const { data: allowed } = await supabase
-  .from("allowed_users")
-  .select("*")
-  .eq("email", email)
-  .maybeSingle();
+      const userSelect = document.getElementById("assignUserSelector");
+      userSelect.innerHTML = "";
 
-// Block if not super_admin
-if (!allowed || allowed.role !== "super_admin") {
-  alert("Access denied. Super Admins only.");
-  window.location.href = "dashboard.html";
-}
+      users?.forEach(u => {
+        userSelect.innerHTML += `<option value="${u.id}">${u.email}</option>`;
+      });
 
-document.getElementById("username").textContent = email;
-document.getElementById("userAvatar").src =
-  `https://ui-avatars.com/api/?name=${encodeURIComponent(email)}`;
+      if (users?.length > 0) {
+        loadCampusAssignments(users[0].id);
+      }
+    }
 
+    // LOAD CAMPUS LIST
+    async function loadCampusList() {
+      const { data } = await supabase
+        .from("feeder_schools")
+        .select("sti_campus")
+        .not("sti_campus", "is", null)
+        .order("sti_campus");
 
-// -------------------------------
-// LOAD USERS
-// -------------------------------
-async function loadUsers() {
-  const { data: users } = await supabase
-    .from("allowed_users")
-    .select("*")
-    .order("email");
+      const select = document.getElementById("campusSelector");
+      select.innerHTML = "";
 
-  const tbody = document.getElementById("usersTable");
-  tbody.innerHTML = "";
+      [...new Set(data.map(c => c.sti_campus))].forEach(campus => {
+        select.innerHTML += `<option value="${campus}">${campus}</option>`;
+      });
+    }
 
-  users.forEach(u => {
-    tbody.innerHTML += `
-      <tr class="border-b border-white/10">
-        <td class="p-2">${u.email}</td>
+    // LOAD ASSIGNED CAMPUSES
+    async function loadCampusAssignments(userId) {
+      const { data } = await supabase
+        .from("user_campuses")
+        .select("*")
+        .eq("user_id", userId);
 
-        <td class="p-2">
-          <select class="bg-white/10 border border-white/20 rounded p-1 text-white"
-                  onchange="updateRole('${u.email}', this.value)">
-            <option ${u.role === "viewer" ? "selected" : ""}>viewer</option>
-            <option ${u.role === "campus_admin" ? "selected" : ""}>campus_admin</option>
-            <option ${u.role === "ho" ? "selected" : ""}>ho</option>
-            <option ${u.role === "super_admin" ? "selected" : ""}>super_admin</option>
-          </select>
-        </td>
+      const list = document.getElementById("assignedCampusList");
+      list.innerHTML = "";
 
-        <td class="p-2">
-          <input type="checkbox"
-                 ${u.enabled ? "checked" : ""}
-                 onchange="toggleEnabled('${u.email}', this.checked)">
-        </td>
+      data?.forEach(c => {
+        list.innerHTML += `
+          <li class="flex justify-between bg-white/5 p-2 rounded-lg">
+            <span>${c.sti_campus}</span>
+            <button onclick="removeCampus('${c.user_id}', '${c.sti_campus}')"
+              class="text-red-400 hover:text-red-600">Remove</button>
+          </li>
+        `;
+      });
+    }
 
-        <td class="p-2 text-slate-300">${u.last_login ?? "—"}</td>
+    // ASSIGN CAMPUS
+    document.getElementById("assignCampusBtn").onclick = async () => {
+      const userId = document.getElementById("assignUserSelector").value;
+      const campus = document.getElementById("campusSelector").value;
 
-        <td class="p-2 text-right">
-          <button onclick="deleteUser('${u.email}')"
-                  class="bg-red-600 hover:bg-red-700 px-3 py-1 rounded">
-            Delete
-          </button>
-        </td>
-      </tr>
-    `;
-  });
-}
+      await supabase.from("user_campuses").insert({
+        user_id: userId,
+        sti_campus: campus
+      });
 
-window.updateRole = async (email, role) => {
-  await supabase.from("allowed_users")
-    .update({ role })
-    .eq("email", email);
-  loadUsers();
-};
+      loadCampusAssignments(userId);
+    };
 
-window.toggleEnabled = async (email, enabled) => {
-  await supabase.from("allowed_users")
-    .update({ enabled })
-    .eq("email", email);
-  loadUsers();
-};
+    // REMOVE CAMPUS
+    window.removeCampus = async (userId, campus) => {
+      await supabase
+        .from("user_campuses")
+        .delete()
+        .eq("user_id", userId)
+        .eq("sti_campus", campus);
 
-window.deleteUser = async (email) => {
-  if (!confirm("Delete this user?")) return;
-  await supabase.from("allowed_users")
-    .delete()
-    .eq("email", email);
-  loadUsers();
-};
+      loadCampusAssignments(userId);
+    };
 
+    // ADD USER
+    document.getElementById("addUserBtn").onclick = async () => {
+      const email = document.getElementById("newUserEmail").value;
+      const role = document.getElementById("newUserRole").value;
 
-// -------------------------------
-// ADD NEW USER
-// -------------------------------
-document.getElementById("addUserBtn").onclick = async () => {
-  const newEmail = document.getElementById("newEmail").value.trim().toLowerCase();
+      await supabase.from("allowed_users").insert({
+        email,
+        role,
+        enabled: true
+      });
 
-  if (!newEmail || !newEmail.endsWith("sti.edu.ph")) {
-    alert("Enter a valid STI email.");
-    return;
-  }
+      loadUsers();
+      loadUsersForCampusAssignment();
+    };
 
-  const { error } = await supabase.from("allowed_users")
-    .insert({
-      id: crypto.randomUUID(),
-      email: newEmail,
-      role: "viewer",
-      enabled: true
-    });
+    // TOGGLE ENABLE/DISABLE
+    window.toggleUser = async (id, enabled) => {
+      await supabase
+        .from("allowed_users")
+        .update({ enabled: !enabled })
+        .eq("id", id);
 
-  if (error) alert(error.message);
+      loadUsers();
+    };
 
-  document.getElementById("newEmail").value = "";
-  loadUsers();
-};
+    // DELETE USER
+    window.deleteUser = async (id) => {
+      await supabase.from("allowed_users").delete().eq("id", id);
 
-loadUsers();
-</script>
+      loadUsers();
+      loadUsersForCampusAssignment();
+    };
 
-
-<!-- ========================================================= -->
-<!-- SIDEBAR TOGGLE -->
-<!-- ========================================================= -->
-<script>
-const sidebar = document.getElementById("sidebar");
-document.getElementById("toggleSidebarBtn").onclick = () =>
-  sidebar.classList.toggle("collapsed");
-</script>
-
+    // INITIAL LOAD
+    loadUsers();
+    loadUsersForCampusAssignment();
+    loadCampusList();
+  </script>
 
 </body>
 </html>
