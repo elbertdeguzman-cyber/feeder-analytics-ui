@@ -1,25 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Feeder Analytics | Dashboard</title>
 
-  <!-- Tailwind -->
+  <!-- TailwindCSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 
+  <!-- Supabase -->
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+    const SUPABASE_URL = "https://ylkmlkelbpxyqauaqcfk.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_72WfxwzjZxDAQmSWVR3_3w_a58rn57e";
+    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // ---- AUTH CHECK ----
+    async function checkAuth() {
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (!user) {
+        window.location.href = "index.html";
+        return;
+      }
+
+      document.getElementById("username").textContent = user.email;
+
+      // Check allowed_users table
+      const { data: allowed } = await supabase
+        .from("allowed_users")
+        .select("*")
+        .eq("email", user.email)
+        .maybeSingle();
+
+      if (!allowed || !allowed.enabled) {
+        alert("You are not authorized to access this system.");
+        await supabase.auth.signOut();
+        window.location.href = "index.html";
+        return;
+      }
+
+      // Update last login
+      await supabase
+        .from("allowed_users")
+        .update({ last_login: new Date().toISOString() })
+        .eq("email", user.email);
+    }
+
+    checkAuth();
+
+    // ---- LOGOUT ----
+    window.logOut = async () => {
+      await supabase.auth.signOut();
+      window.location.href = "index.html";
+    };
+  </script>
+
   <style>
-    /* fade animation */
     .fade-rise {
       opacity: 0;
       transform: translateY(15px);
       animation: fadeRise 0.6s ease forwards;
     }
     @keyframes fadeRise {
-      to { opacity: 1; transform: translateY(0); }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
-    /* sidebar collapse */
     #sidebar {
       transition: width 0.25s ease, padding 0.25s ease;
     }
@@ -28,24 +78,19 @@
       padding-left: 0.75rem;
       padding-right: 0.75rem;
     }
-    #sidebar.collapsed .nav-label {
-      opacity: 0;
-      pointer-events: none;
-    }
   </style>
 </head>
 
 <body class="bg-gradient-to-br from-slate-900 to-slate-700 min-h-screen text-white">
 
-<!-- ========================================================= -->
 <!-- SIDEBAR -->
-<!-- ========================================================= -->
 <aside 
   id="sidebar"
-  class="bg-white/10 backdrop-blur-xl border-r border-white/10 w-64 min-h-screen p-6 flex flex-col transition-all duration-300 fixed"
->
+  class="bg-white/10 backdrop-blur-xl border-r border-white/10 w-64 min-h-screen p-6 flex flex-col transition-all duration-300 fixed left-0 top-0">
+
   <!-- Collapse Button -->
-  <button id="toggleSidebarBtn"
+  <button 
+    id="toggleSidebar"
     class="text-white mb-6 hover:bg-white/10 p-2 rounded-lg transition">
     ☰
   </button>
@@ -56,66 +101,55 @@
     <span class="text-xl font-bold nav-label">Feeder Analytics</span>
   </div>
 
-  <!-- MENU -->
+  <!-- NAV MENU -->
   <nav class="space-y-2">
 
-    <a href="#" class="flex items-center space-x-3 text-white/80 hover:bg-white/10 p-3 rounded-lg">
-      <span class="text-lg">🏠</span>
-      <span class="nav-label">Dashboard Overview</span>
+    <a href="dashboard.html" class="flex items-center space-x-3 text-white/90 hover:bg-white/10 p-3 rounded-lg transition">
+      <span class="text-lg">🏠</span><span class="nav-label">Dashboard Overview</span>
     </a>
 
-    <a href="feeder-review-dashboard.html" 
-       class="flex items-center space-x-3 text-white/80 hover:bg-white/10 p-3 rounded-lg">
-      <span class="text-lg">📊</span>
-      <span class="nav-label">Feeder Reviews</span>
+    <a href="feeder-review-dashboard.html" class="flex items-center space-x-3 text-white/90 hover:bg-white/10 p-3 rounded-lg transition">
+      <span class="text-lg">📊</span><span class="nav-label">Feeder Reviews</span>
     </a>
 
-    <a href="#" class="flex items-center space-x-3 text-white/80 hover:bg-white/10 p-3 rounded-lg">
-      <span class="text-lg">💡</span>
-      <span class="nav-label">COS Insights</span>
+    <a href="#" class="flex items-center space-x-3 text-white/90 hover:bg-white/10 p-3 rounded-lg transition">
+      <span class="text-lg">💡</span><span class="nav-label">COS Insights</span>
     </a>
 
-    <a href="#" class="flex items-center space-x-3 text-white/80 hover:bg-white/10 p-3 rounded-lg">
-      <span class="text-lg">🏫</span>
-      <span class="nav-label">Campus Data</span>
+    <a href="#" class="flex items-center space-x-3 text-white/90 hover:bg-white/10 p-3 rounded-lg transition">
+      <span class="text-lg">🏫</span><span class="nav-label">Campus Data</span>
     </a>
 
-    <!-- ADMIN MENU (Visible only if role === super_admin) -->
-    <a id="adminToolsLink" href="admin-users.html"
-       class="flex items-center space-x-3 text-white/80 hover:bg-white/10 p-3 rounded-lg">
-      <span class="text-lg">⚙️</span>
-      <span class="nav-label">Admin Tools</span>
+    <a href="admin-users.html" class="flex items-center space-x-3 text-white/90 hover:bg-white/10 p-3 rounded-lg transition">
+      <span class="text-lg">⚙️</span><span class="nav-label">Admin Tools</span>
     </a>
 
   </nav>
 </aside>
 
+<!-- TOP NAV BAR -->
+<header 
+  id="topbar"
+  class="md:ml-64 bg-white/10 backdrop-blur-xl border-b border-white/10 p-4 flex justify-between items-center shadow-lg fade-rise transition-all duration-300">
 
-<!-- ========================================================= -->
-<!-- TOP NAV -->
-<!-- ========================================================= -->
-<header class="ml-64 bg-white/10 backdrop-blur-xl border-b border-white/10 p-4 flex justify-between items-center shadow-lg fade-rise">
-  <button id="toggleSidebarMobile" class="md:hidden text-white text-2xl px-2">☰</button>
-
-  <h1 class="text-xl font-semibold tracking-wide">Dashboard</h1>
+  <div></div>
 
   <div class="flex items-center gap-3">
-    <span id="username" class="text-sm text-slate-300">Loading...</span>
-    <img id="userAvatar" 
-         src="https://ui-avatars.com/api/?name=User" 
-         class="h-8 w-8 rounded-full border border-white/20" />
+    <span id="username" class="text-sm text-slate-200">Loading...</span>
+    <img src="https://ui-avatars.com/api/?name=STI&background=0D8ABC&color=fff" class="h-8 w-8 rounded-full border border-white/20" />
+    <button onclick="logOut()" class="bg-red-500 hover:bg-red-600 px-3 py-1 rounded-lg text-sm">Logout</button>
   </div>
 </header>
 
-
-<!-- ========================================================= -->
 <!-- MAIN CONTENT -->
-<!-- ========================================================= -->
-<main class="ml-64 p-6 fade-rise">
+<main 
+  id="mainContent" 
+  class="md:ml-64 p-6 fade-rise transition-all duration-300">
 
   <div class="bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-lg">
+
     <h2 class="text-2xl font-bold mb-4">Welcome to Feeder Analytics</h2>
-    <p class="text-slate-300 mb-4">This section will contain charts and insights.</p>
+    <p class="text-slate-300 mb-4">This section will contain your dashboard charts, tables, and insights.</p>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
@@ -134,88 +168,42 @@
 
 </main>
 
-
-<!-- ========================================================= -->
-<!-- AUTH & ACCESS CONTROL SCRIPT -->
-<!-- ========================================================= -->
-<script type="module">
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-// INIT SUPABASE
-const supabase = createClient(
-  "https://ylkmlkelbpxyqauaqcfk.supabase.co",
-  "sb_publishable_72WfxwzjZxDAQmSWVR3_3w_a58rn57e"
-);
-
-// 1) CHECK AUTH STATE
-const { data: auth } = await supabase.auth.getUser();
-if (!auth?.user) {
-  window.location.href = "login.html";
-}
-const user = auth.user;
-
-// UI SETUP
-document.getElementById("username").textContent = user.email;
-document.getElementById("userAvatar").src =
-  `https://ui-avatars.com/api/?name=${encodeURIComponent(user.email)}`;
-
-
-// 2) LOAD ALLOWLIST ENTRY
-const { data: allowed } = await supabase
-  .from("allowed_users")
-  .select("*")
-  .eq("email", user.email.toLowerCase())
-  .maybeSingle();
-
-// If NOT IN ALLOWLIST → block access
-if (!allowed) {
-  alert("You are not authorized to access this system.");
-  await supabase.auth.signOut();
-  window.location.href = "login.html";
-}
-
-// If disabled → block access
-if (!allowed.enabled) {
-  alert("Your access has been disabled.");
-  await supabase.auth.signOut();
-  window.location.href = "login.html";
-}
-
-
-// 3) UPDATE LAST LOGIN
-await supabase
-  .from("allowed_users")
-  .update({ last_login: new Date().toISOString() })
-  .eq("email", user.email.toLowerCase());
-
-
-// 4) ROLE-BASED ACCESS (show/hide Admin Tools)
-if (allowed.role !== "super_admin") {
-  document.getElementById("adminToolsLink")?.remove();
-}
-
-</script>
-
-
-<!-- ========================================================= -->
-<!-- SIDEBAR TOGGLE SCRIPT (WORKING VERSION) -->
-<!-- ========================================================= -->
+<!-- SIDEBAR COLLAPSE SCRIPT -->
 <script>
-const sidebar = document.getElementById("sidebar");
-const toggleBtn = document.getElementById("toggleSidebarBtn");
-const toggleMobile = document.getElementById("toggleSidebarMobile");
+  const sidebar = document.getElementById("sidebar");
+  const toggleSidebarBtn = document.getElementById("toggleSidebar");
+  const topbar = document.getElementById("topbar");
+  const mainContent = document.getElementById("mainContent");
+  const labels = document.querySelectorAll(".nav-label");
 
-// Desktop collapse
-toggleBtn.onclick = () => {
-  sidebar.classList.toggle("collapsed");
-};
+  toggleSidebarBtn.addEventListener("click", () => {
+    const collapsed = sidebar.classList.toggle("collapsed");
 
-// Mobile mode (hide/show)
-toggleMobile.onclick = () => {
-  sidebar.classList.toggle("hidden");
-};
+    // Fade labels
+    labels.forEach(label => {
+      if (collapsed) {
+        label.classList.add("opacity-0", "pointer-events-none");
+      } else {
+        label.classList.remove("opacity-0", "pointer-events-none");
+      }
+    });
+
+    // Shift layout
+    if (collapsed) {
+      topbar.classList.remove("md:ml-64");
+      topbar.classList.add("md:ml-20");
+
+      mainContent.classList.remove("md:ml-64");
+      mainContent.classList.add("md:ml-20");
+    } else {
+      topbar.classList.remove("md:ml-20");
+      topbar.classList.add("md:ml-64");
+
+      mainContent.classList.remove("md:ml-20");
+      mainContent.classList.add("md:ml-64");
+    }
+  });
 </script>
-
 
 </body>
 </html>
